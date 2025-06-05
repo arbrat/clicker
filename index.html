@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мощный кликер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            background-color: #f0f0f0;
+            background-image: url('https://via.placeholder.com/1920x1080/f0f0f0/cccccc?text=Стандартный+фон');
+            background-size: cover;
+            background-attachment: fixed;
+            transition: background 0.5s;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        #clicker {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 24px;
+            margin: 20px 2px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.1s;
+        }
+        
+        #clicker:active {
+            transform: scale(0.95);
+            background-color: #3e8e41;
+        }
+        
+        #counter {
+            font-size: 36px;
+            margin: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        #upgrades {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .upgrade {
+            background-color: #ffffff;
+            border: 2px solid #2196F3;
+            padding: 15px;
+            width: 200px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upgrade:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .upgrade:disabled {
+            background-color: #eeeeee;
+            border-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .upgrade-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 3px solid #2196F3;
+        }
+        
+        .upgrade-title {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .upgrade-power {
+            color: #2196F3;
+        }
+        
+        .upgrade-cost {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .upgrade-owned {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        #background-selector {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 10px;
+        }
+        
+        .background-option {
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #9C27B0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .background-option:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .background-option:hover:not(:disabled) {
+            background-color: #7B1FA2;
+        }
+        
+        #stats {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 10px;
+        }
+        
+        .cps {
+            font-size: 18px;
+            color: #FF5722;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Мощный кликер</h1>
+        <div id="counter">0 кликов</div>
+        <div class="cps">Кликов в секунду: 0</div>
+        <button id="clicker">КЛИКАЙ!</button>
+        
+        <div id="upgrades">
+            <h2 style="width: 100%;">Улучшения</h2>
+            <!-- Улучшения с 1 по 10 -->
+            <button class="upgrade" onclick="buyUpgrade(1)">
+                <img src="IMG_20250605_131857.jpg" class="upgrade-img" alt="Улучшение 1">
+                <div class="upgrade-title">Автокликер</div>
+                <div class="upgrade-power">+1 клик/сек</div>
+                <div class="upgrade-cost">50 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(2)">
+                <img src="IMG_20250605_132043.jpg" class="upgrade-img" alt="Улучшение 2">
+                <div class="upgrade-title">Улучшенный кликер</div>
+                <div class="upgrade-power">+5 клик/сек</div>
+                <div class="upgrade-cost">250 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(3)">
+                <img src="IMG_20250605_132327.jpg" class="upgrade-img" alt="Улучшение 3">
+                <div class="upgrade-title">Мега кликер</div>
+                <div class="upgrade-power">+20 клик/сек</div>
+                <div class="upgrade-cost">1,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(4)">
+                <img src="IMG_20250516_171245.jpg" class="upgrade-img" alt="Улучшение 4">
+                <div class="upgrade-title">Ультра кликер</div>
+                <div class="upgrade-power">+50 клик/сек</div>
+                <div class="upgrade-cost">5,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(5)">
+                <img src="IMG_20250515_221431.jpg" class="upgrade-img" alt="Улучшение 5">
+                <div class="upgrade-title">Гига кликер</div>
+                <div class="upgrade-power">+300 клик/сек</div>
+                <div class="upgrade-cost">25,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(6)">
+                <img src="IMG_20220319_170841.jpg" class="upgrade-img" alt="Улучшение 6">
+                <div class="upgrade-title">Тера кликер</div>
+                <div class="upgrade-power">+1,500 клик/сек</div>
+                <div class="upgrade-cost">100,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(7)">
+                <img src="Screenshot_2025-05-26-22-48-19-805_org.telegram.messenger.jpg" class="upgrade-img" alt="Улучшение 7">
+                <div class="upgrade-title">Пета кликер</div>
+                <div class="upgrade-power">+7,500 клик/сек</div>
+                <div class="upgrade-cost">500,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(8)">
+                <img src="IMG_20250605_131823.jpg" class="upgrade-img" alt="Улучшение 8">
+                <div class="upgrade-title">Экза кликер</div>
+                <div class="upgrade-power">+30,000 клик/сек</div>
+                <div class="upgrade-cost">2,500,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(9)">
+                <img src="IMG_20250605_132405.jpg" class="upgrade-img" alt="Улучшение 9">
+                <div class="upgrade-title">Зетта кликер</div>
+                <div class="upgrade-power">+150,000 клик/сек</div>
+                <div class="upgrade-cost">10,000,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+            
+            <button class="upgrade" onclick="buyUpgrade(10)">
+                <img src="Screenshot_2025-01-28-23-39-32-080_com.google.android.apps.photos.jpg" class="upgrade-img" alt="Улучшение 10">
+                <div class="upgrade-title">Йотта кликер</div>
+                <div class="upgrade-power">+750,000 клик/сек</div>
+                <div class="upgrade-cost">50,000,000 кликов</div>
+                <div class="upgrade-owned">Куплено: 0</div>
+            </button>
+        </div>
+        
+        <div id="background-selector">
+            <h2>Смена фона</h2>
+            <button class="background-option" onclick="changeBackground(1)">Фон 1 - 100,000 кликов</button>
+            <button class="background-option" onclick="changeBackground(2)">Фон 2 - 250,000 кликов</button>
+            <button class="background-option" onclick="changeBackground(3)">Фон 3 - 500,000 кликов</button>
+            <button class="background-option" onclick="changeBackground(4)">Фон 4 - 1,000,000 кликов</button>
+        </div>
+        
+        <div id="stats">
+            <h2>Статистика</h2>
+            <div>Всего кликов: <span id="total-clicks">0</span></div>
+            <div>Кликов в секунду: <span class="cps">0</span></div>
+            <div>Куплено улучшений: <span id="total-upgrades">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        let clicks = 0;
+        let totalClicks = 0;
+        let clickPower = 1;
+        let cps = 0;
+        let currentBackground = 0;
+        
+        const backgrounds = [
+            { cost: 0, image: 'https://via.placeholder.com/1920x1080/f0f0f0/cccccc?text=Стандартный+фон' },
+            { cost: 100000, image: 'IMG_20250605_130147_014.jpg' },
+            { cost: 250000, image: 'IMG_20250605_132336.jpg' },
+            { cost: 500000, image: 'IMG_20250605_134029.jpg' },
+            { cost: 1000000, image: 'IMG_20250605_134117.jpg' }
+        ];
+        
+        let autoClickers = {
+            1: { power: 1, cost: 50, owned: 0, name: "Автокликер" },
+            2: { power: 5, cost: 250, owned: 0, name: "Улучшенный кликер" },
+            3: { power: 20, cost: 1000, owned: 0, name: "Мега кликер" },
+            4: { power: 50, cost: 5000, owned: 0, name: "Ультра кликер" },
+            5: { power: 300, cost: 25000, owned: 0, name: "Гей кликер" },
+            6: { power: 1500, cost: 100000, owned: 0, name: "Клитор кликер" },
+            7: { power: 7500, cost: 500000, owned: 0, name: "Пидор кликер" },
+            8: { power: 30000, cost: 2500000, owned: 0, name: "Мега секс кликер" },
+            9: { power: 150000, cost: 10000000, owned: 0, name: "Кенты кликер" },
+            10: { power: 750000, cost: 50000000, owned: 0, name: "Динаху кликер" }
+        };
+        
+        // Элементы DOM
+        const clickerButton = document.getElementById('clicker');
+        const counterDisplay = document.getElementById('counter');
+        const cpsDisplay = document.querySelector('.cps');
+        const totalClicksDisplay = document.getElementById('total-clicks');
+        const totalUpgradesDisplay = document.getElementById('total-upgrades');
+        const upgradeButtons = document.querySelectorAll('.upgrade');
+        const backgroundButtons = document.querySelectorAll('.background-option');
+        
+        // Обработчик клика
+        clickerButton.addEventListener('click', function() {
+            clicks += clickPower;
+            totalClicks += clickPower;
+            updateDisplay();
+        });
+        
+        // Автокликеры
+        setInterval(function() {
+            let totalAutoClicks = 0;
+            for (const key in autoClickers) {
+                totalAutoClicks += autoClickers[key].power * autoClickers[key].owned;
+            }
+            clicks += totalAutoClicks;
+            totalClicks += totalAutoClicks;
+            cps = totalAutoClicks;
+            updateDisplay();
+        }, 1000);
+        
+        // Покупка улучшений
+        function buyUpgrade(upgradeId) {
+            const upgrade = autoClickers[upgradeId];
+            if (clicks >= upgrade.cost) {
+                clicks -= upgrade.cost;
+                upgrade.owned += 1;
+                upgrade.cost = Math.floor(upgrade.cost * 1.5); // Увеличиваем стоимость для следующей покупки
+                updateDisplay();
+            }
+        }
+        
+        // Смена фона
+        function changeBackground(bgId) {
+            const bg = backgrounds[bgId];
+            if (clicks >= bg.cost && currentBackground !== bgId) {
+                if (currentBackground !== 0 || bgId === 0) {
+                    clicks -= bg.cost;
+                }
+                currentBackground = bgId;
+                document.body.style.backgroundImage = `url('${bg.image}')`;
+                updateDisplay();
+            }
+        }
+        
+        // Форматирование чисел
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        // Обновление отображения
+        function updateDisplay() {
+            counterDisplay.textContent = formatNumber(clicks) + ' кликов';
+            cpsDisplay.textContent = 'Кликов в секунду: ' + formatNumber(cps);
+            totalClicksDisplay.textContent = formatNumber(totalClicks);
+            
+            // Обновляем состояние кнопок улучшений
+            let totalUpgrades = 0;
+            upgradeButtons.forEach((button, index) => {
+                const upgradeId = index + 1;
+                const upgrade = autoClickers[upgradeId];
+                if (upgrade) {
+                    button.querySelector('.upgrade-cost').textContent = formatNumber(upgrade.cost) + ' кликов';
+                    button.querySelector('.upgrade-owned').textContent = 'Куплено: ' + upgrade.owned;
+                    button.disabled = clicks < upgrade.cost;
+                    totalUpgrades += upgrade.owned;
+                }
+            });
+            
+            totalUpgradesDisplay.textContent = totalUpgrades;
+            
+            // Обновляем состояние кнопок фонов
+            backgroundButtons.forEach((button, index) => {
+                const bgId = index + 1;
+                const bg = backgrounds[bgId];
+                button.disabled = clicks < bg.cost || currentBackground === bgId;
+            });
+        }
+        
+        // Инициализация
+        updateDisplay();
+    </script>
+</body>
+</html>
